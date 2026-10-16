@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="theme-color" content="#0c0a12"/>
+<title>Diamond Live 18+</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="ageGate" class="gate">
+  <div class="box">
+    <h1>18+</h1>
+    <p>Conteudo adulto. So para maiores de 18 anos.</p>
+    <button class="btn" id="btnAgeYes">Tenho 18+</button>
+    <button class="btn outline" id="btnAgeNo">Sair</button>
+  </div>
+</div>
+<div id="app" class="hidden">
+  <header class="top">
+    <strong>Diamond Live</strong>
+    <span id="diamondsHud" class="diamonds">💎 0</span>
+    <button type="button" class="link" id="btnLogout">Sair</button>
+  </header>
+  <nav class="tabs" id="mainTabs">
+    <button data-tab="home" class="on">Online</button>
+    <button data-tab="recharge">Diamantes</button>
+    <button data-tab="profile">Perfil</button>
+    <button data-tab="panel" id="tabPanel" class="hidden">Painel</button>
+  </nav>
+  <main>
+    <section id="view-auth" class="view">
+      <div class="card">
+        <h2>Entrar / Cadastro</h2>
+        <div class="row">
+          <button type="button" class="chip on" data-mode="login">Entrar</button>
+          <button type="button" class="chip" data-mode="register">Cadastrar</button>
+        </div>
+        <form id="authForm">
+          <input id="authUser" placeholder="Usuario" required autocomplete="username"/>
+          <input id="authPass" type="password" placeholder="Senha" required/>
+          <select id="authRole" class="hidden">
+            <option value="user">Homem (cliente)</option>
+            <option value="model">Mulher (modelo)</option>
+          </select>
+          <p id="authErr" class="err hidden"></p>
+          <button class="btn" type="submit">Continuar</button>
+        </form>
+        <p class="hint">Dono: owner / Owner#Live18</p>
+      </div>
+    </section>
+    <section id="view-home" class="view hidden">
+      <h2 class="sec">Mulheres online</h2>
+      <div id="modelsGrid" class="grid"></div>
+    </section>
+    <section id="view-recharge" class="view hidden">
+      <h2 class="sec">Recarregar diamantes</h2>
+      <p class="hint">Pagamento via <b>PicPay</b>. Apos pagar, peca aprovacao no app.</p>
+      <div class="packs">
+        <button class="pack" data-diamonds="50" data-price="9.90">50 💎 · R$ 9,90</button>
+        <button class="pack" data-diamonds="120" data-price="19.90">120 💎 · R$ 19,90</button>
+        <button class="pack" data-diamonds="300" data-price="39.90">300 💎 · R$ 39,90</button>
+        <button class="pack" data-diamonds="700" data-price="79.90">700 💎 · R$ 79,90</button>
+      </div>
+      <div id="payBox" class="card hidden">
+        <h3>Pagar no PicPay</h3>
+        <p>Chave / ID: <code id="picpayKey">fff503e1-60b3-457b-bdc4-ddf2c892cfda</code></p>
+        <p>Valor: <b id="payValue">R$ 0</b> · Diamantes: <b id="payDiamonds">0</b></p>
+        <a class="btn" id="picpayLink" href="https://picpay.com/" target="_blank" rel="noopener">Abrir PicPay</a>
+        <form id="payForm" class="mt">
+          <input id="payProof" placeholder="Codigo/ID da transferencia (opcional)"/>
+          <button class="btn secondary" type="submit">Ja paguei — pedir aprovacao</button>
+        </form>
+      </div>
+      <div class="card mt"><h3>Minhas recargas</h3><div id="rechargeList"></div></div>
+    </section>
+    <section id="view-profile" class="view hidden">
+      <div class="card">
+        <h2>Perfil</h2>
+        <p>User: <b id="profUser"></b></p>
+        <p>Tipo: <b id="profRole"></b></p>
+        <p>Diamantes: <b id="profDiamonds"></b></p>
+        <label class="switch" id="modelOnlineWrap">
+          <input type="checkbox" id="chkOnline"/> Ficar online (modelos)
+        </label>
+      </div>
+    </section>
+    <section id="view-call" class="view hidden">
+      <div class="callStage">
+        <video id="remoteVideo" playsinline autoplay></video>
+        <video id="localVideo" playsinline autoplay muted></video>
+        <div class="callBar">
+          <span id="callWith"></span>
+          <span id="callCost">10 💎/min</span>
+          <button type="button" class="btn danger" id="btnEndCall">Encerrar</button>
+        </div>
+      </div>
+      <p class="hint">Camera local real. Video remoto real 1-a-1 precisa WebRTC + servidor.</p>
+    </section>
+    <section id="view-panel" class="view hidden">
+      <h2 class="sec">Painel</h2>
+      <div class="row" id="panelTabs">
+        <button class="chip on" data-panel="admin">Admin</button>
+        <button class="chip" data-panel="mod">Moderacao</button>
+        <button class="chip" data-panel="owner">Dono</button>
+      </div>
+      <div id="panel-admin" class="card">
+        <h3>Admin — usuarios e recargas</h3>
+        <div id="adminUsers"></div>
+        <h4 class="mt">Recargas pendentes</h4>
+        <div id="adminRecharges"></div>
+      </div>
+      <div id="panel-mod" class="card hidden">
+        <h3>Moderacao</h3>
+        <div id="modList"></div>
+      </div>
+      <div id="panel-owner" class="card hidden">
+        <h3>Dono</h3>
+        <p>PicPay: <code>fff503e1-60b3-457b-bdc4-ddf2c892cfda</code></p>
+        <p class="mt">Diamantes aprovados: <b id="ownerStats">0</b></p>
+        <button type="button" class="btn secondary" id="btnExport">Exportar JSON</button>
+        <button type="button" class="btn danger" id="btnWipe">Zerar dados</button>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
